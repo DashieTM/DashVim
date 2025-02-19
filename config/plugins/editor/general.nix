@@ -5,7 +5,32 @@
 }: {
   extraPlugins = with pkgs.vimPlugins; [
     overseer-nvim
+    (pkgs.vimUtils.buildVimPlugin {
+      name = "patterns.nvim";
+      src = pkgs.fetchFromGitHub {
+        owner = "OXY2DEV";
+        repo = "patterns.nvim";
+        rev = "7b0be231071a83d3ea01cc0bdeead03db9867eb8";
+        hash = "sha256-PqNJYT+p4Mvf3nsdBrUV2QgJQiChGITM0UDwGBpJTu8=";
+      };
+    })
+    (pkgs.vimUtils.buildVimPlugin {
+      name = "multicursor.nvim";
+      src = pkgs.fetchFromGitHub {
+        owner = "jake-stewart";
+        repo = "multicursor.nvim";
+        rev = "86537c3771f1989592568c9d92da2e201297867a";
+        hash = "sha256-/UV+oHQ2Lr4zNiqgJM44o1RhkftrfSzf3U58loszEz8=";
+      };
+    })
   ];
+  extraConfigLua =
+    /*
+    lua
+    */
+    ''
+      require("multicursor-nvim").setup()
+    '';
   plugins = {
     lz-n = {
       enable = true;
@@ -150,6 +175,24 @@
       nixvimInjections = true;
       grammarPackages = pkgs.vimPlugins.nvim-treesitter.passthru.allGrammars;
     };
+    treesitter-textobjects = {
+      enable = true;
+      swap = {
+        enable = true;
+        swapPrevious = {
+          "<leader>sp" = {
+            query = "@parameter.inner";
+            desc = "Swap previous parameter";
+          };
+        };
+        swapNext = {
+          "<leader>sn" = {
+            query = "@parameter.inner";
+            desc = "Swap next parameter";
+          };
+        };
+      };
+    };
     diffview = {
       enable = true;
     };
@@ -165,6 +208,9 @@
     instant = {
       enable = true;
       settings.username = config'.instantUsername;
+    };
+    csvview = {
+      enable = true;
     };
   };
 }
