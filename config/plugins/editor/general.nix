@@ -1,6 +1,7 @@
 {
   pkgs,
   config',
+  config,
   ...
 }: let
   treesitter-patterns = pkgs.tree-sitter.buildGrammar {
@@ -111,6 +112,8 @@ in {
     };
     image = {
       enable = true;
+      # For neovide, this should only be a toggle either way
+      autoLoad = false;
     };
     noice = {
       enable = true;
